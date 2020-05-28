@@ -142,12 +142,16 @@ class GitWorkingCopy(common.BaseWorkingCopy):
             args.extend(["--depth", self.source["depth"]])
         if "branch" in self.source:
             args.extend(["-b", self.source["branch"]])
+        if 'rev' in self.source and 'depth' in self.source:
+            # We checkout with a revision and shallow depth, check out to the revision
+            args.extend(["-b", self.source["rev"]])
         args.extend([url, path])
         cmd = self.run_git(args)
         stdout, stderr = cmd.communicate()
         if cmd.returncode != 0:
             raise GitError("git cloning of '%s' failed.\n%s" % (name, stderr))
-        if 'rev' in self.source:
+        if ('rev' in self.source) and ('depth' not in self.source):
+            # Only switch to a branch if we have the full repo
             stdout, stderr = self.git_switch_branch(stdout, stderr)
         if 'pushurl' in self.source:
             stdout, stderr = self.git_set_pushurl(stdout, stderr)

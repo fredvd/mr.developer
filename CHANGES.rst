@@ -5,6 +5,10 @@ Changelog
 2.0.1 (Unreleased)
 ------------------
 
+* Don't switch to a branch when we use git-clone-depth with a revision, clone the
+  revision directly.
+  [fredvd]
+
 * Fix ``bin/develop help`` on Python 3.
 
 
